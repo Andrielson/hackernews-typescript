@@ -5,6 +5,10 @@
   "repository": "git@github.com:andrielson/hackernews-typescript.git",
   "author": "Andrielson Silva <andrielson@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only --no-notify --exit-child src/index.ts",
+    "generate": "ts-node --transpile-only src/schema.ts"
+  },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
     "@types/node": "^18.11.3",
