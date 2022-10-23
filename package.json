@@ -1,0 +1,8 @@
+{
+  "name": "hackernews-typescript",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:andrielson/hackernews-typescript.git",
+  "author": "Andrielson Silva <andrielson@gmail.com>",
+  "license": "MIT"
+}
