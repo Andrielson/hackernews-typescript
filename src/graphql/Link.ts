@@ -1,5 +1,6 @@
 import {extendType, idArg, nonNull, nullable, objectType, stringArg} from "nexus";
 import {NexusGenObjects} from "../../nexus-typegen";
+import {Context} from "../context";
 
 export const Link = objectType({
     name: "Link",
@@ -28,8 +29,8 @@ export const LinksQuery = extendType({
     definition(t) {
         t.nonNull.list.nonNull.field("links", {
             type: "Link",
-            resolve() {
-                return links;
+            resolve(parent, args, { prisma }: Context) {
+                return prisma.link.findMany();
             },
         });
     },
@@ -62,12 +63,10 @@ export const CreateLinkMutation = extendType({
                 url: nonNull(stringArg()),
             },
 
-            resolve(_, args) {
-                const {description, url} = args;
-                const id = links.length + 1;
-                const link = {id, description, url};
-                links.push(link);
-                return link;
+            resolve(_, { description, url }, { prisma }: Context) {
+                return prisma.link.create({
+                    data: { description, url}
+                });
             },
         });
     },
