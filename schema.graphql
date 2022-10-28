@@ -5,6 +5,7 @@
 type Link {
   description: String!
   id: Int!
+  postedBy: User
   url: String!
 }
 
