@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "833de9f4-ced3-41fd-bb95-3e8af81c7889",
+		"name": "hackernews-typescript",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "325431"
+	},
+	"item": [
+		{
+			"name": "[Q] Links",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\n    links {\n        id\n        description\n        url\n    }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Q] Link",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query Query($id: ID!){\n    link(id: $id) {\n        id\n        description\n        url\n    }\n}",
+						"variables": "{\n    \"id\": 2\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[M] Delete link",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation DeleteLink($id: ID!) {\n    deleteLink(id: $id) {\n        id\n        description\n        url\n    }\n}",
+						"variables": "{\n    \"id\": 2\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[M] Create link",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CreateLink($description: String!, $url: String!){\n    createLink(description: $description, url: $url) {\n        id\n        description\n        url\n    }\n}",
+						"variables": "{\n  \"description\": \"{{$randomLoremSentence}}\",\n  \"url\": \"{{$randomUrl}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[M] Update link",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation UpdateLink(\n    $id: ID!,\n    $description: String, \n    $url: String\n) {\n    updateLink(\n        id: $id, \n        description: $description, \n        url: $url\n    ) {\n        id\n        description\n        url\n    }\n}",
+						"variables": "{\n    \"id\": 1,\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"url\": \"{{$randomUrl}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
