@@ -1,3 +1,4 @@
+import {randomUUID} from "crypto";
 import {extendType, nonNull, objectType, stringArg} from "nexus";
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
@@ -50,7 +51,16 @@ export const AuthMutation = extendType({
                 const {email, name} = args;
                 const password = await bcrypt.hash(args.password, 10);
                 const user = await prisma.user.create({data: {email, name, password}});
-                const token = jwt.sign({userId: user.id}, APP_SECRET);
+
+                const now = new Date();
+                const tokenPayload: jwt.JwtPayload = {
+                    iat: now.getTime(),
+                    jti: randomUUID(),
+                    sub: String(user.id),
+                    exp: now.setMinutes(now.getMinutes() + 30),
+                };
+
+                const token = jwt.sign(tokenPayload, APP_SECRET);
 
                 return {token, user};
             }
