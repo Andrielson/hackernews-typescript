@@ -1,5 +1,4 @@
 import {extendType, idArg, nonNull, nullable, objectType, stringArg} from "nexus";
-import {NexusGenObjects} from "../../nexus-typegen";
 import {Context} from "../context";
 
 export const Link = objectType({
@@ -11,25 +10,12 @@ export const Link = objectType({
     },
 });
 
-const links: NexusGenObjects["Link"][] = [
-    {
-        id: 1,
-        url: "www.howtographql.com",
-        description: "Fullstack tutorial for GraphQL"
-    },
-    {
-        id: 2,
-        url: "graphql.org",
-        description: "GraphQL official website"
-    },
-];
-
 export const LinksQuery = extendType({
     type: "Query",
     definition(t) {
         t.nonNull.list.nonNull.field("links", {
             type: "Link",
-            resolve(parent, args, { prisma }: Context) {
+            resolve(_, args, {prisma}: Context) {
                 return prisma.link.findMany();
             },
         });
@@ -45,9 +31,8 @@ export const LinkQuery = extendType({
                 id: nonNull(idArg())
             },
 
-            resolve(_, args) {
-                const {id} = args;
-                return links.find(it => it.id === +id)!;
+            resolve(_, {id}, {prisma}: Context) {
+                return prisma.link.findUnique({where: {id: +id}});
             },
         });
     },
@@ -63,9 +48,9 @@ export const CreateLinkMutation = extendType({
                 url: nonNull(stringArg()),
             },
 
-            resolve(_, { description, url }, { prisma }: Context) {
+            resolve(_, {description, url}, {prisma}: Context) {
                 return prisma.link.create({
-                    data: { description, url}
+                    data: {description, url}
                 });
             },
         });
@@ -82,13 +67,13 @@ export const UpdateLinkMutation = extendType({
                 description: nullable(stringArg()),
                 url: nullable(stringArg()),
             },
-            resolve(_, args) {
-                const {id, description, url} = args;
-                const link = links.find(it => it.id === +id);
-                if (!link) throw new Error("Link not found");
-                if (description) link.description = description;
-                if (url) link.url = url;
-                return link;
+            resolve(_, {id, ...data}, {prisma}: Context) {
+                return prisma.link.update({
+                    where: {id: +id},
+                    data: data as any
+                }).catch(() => {
+                    throw new Error("Link not found");
+                });
             },
         });
     },
@@ -102,13 +87,11 @@ export const DeleteLinkMutation = extendType({
             args: {
                 id: nonNull(idArg()),
             },
-            resolve(_, args) {
-                const {id} = args;
-                const index = links.findIndex(it => it.id === +id);
-                if (index < 0) throw new Error("Link not found");
-                const link = links[index];
-                links.splice(index, 1);
-                return link;
+            resolve(_, {id}, {prisma}: Context) {
+                return prisma.link.delete({where: {id: +id}})
+                    .catch(() => {
+                        throw new Error("Link not found");
+                    });
             },
         });
     },
