@@ -18,3 +18,10 @@ type Query {
   link(id: ID!): Link
   links: [Link!]!
 }
+
+type User {
+  email: String!
+  id: Int!
+  links: [Link!]!
+  name: String!
+}
