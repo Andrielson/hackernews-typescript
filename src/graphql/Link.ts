@@ -55,28 +55,34 @@ export const Feed = objectType({
 export const LinkQueries = extendType({
     type: "Query",
     definition(t) {
-        t.nonNull.list.nonNull.field("links", {
-            type: "Link",
+        t.nonNull.field("feed", {
+            type: "Feed",
             args: {
                 filter: stringArg(),
                 skip: intArg(),
                 take: intArg(),
                 orderBy: arg({type: list(nonNull(LinkOrderByInput))}),
             },
-            resolve(_, {filter, skip, take, orderBy}, {prisma}: Context) {
+            async resolve(_, args, {prisma}: Context) {
+                const {filter, skip, take, orderBy} = args;
                 const where = !filter ? {} : {
                     OR: [
                         {description: {contains: filter}},
                         {url: {contains: filter}}
                     ]
                 };
-                return prisma.link
+                const links = await prisma.link
                     .findMany({
                         where,
                         skip: skip as number | undefined,
                         take: take as number | undefined,
                         orderBy: orderBy as Prisma.Enumerable<Prisma.LinkOrderByWithRelationInput> | undefined,
                     });
+
+                const count = await prisma.link.count({where});
+                const id = `main-feed:${JSON.stringify(args)}`;
+
+                return {links, count, id};
             },
         });
         t.nullable.field("link", {

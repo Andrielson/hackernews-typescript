@@ -43,8 +43,8 @@ type Mutation {
 }
 
 type Query {
+  feed(filter: String, orderBy: [LinkOrderByInput!], skip: Int, take: Int): Feed!
   link(id: ID!): Link
-  links(filter: String, orderBy: [LinkOrderByInput!], skip: Int, take: Int): [Link!]!
 }
 
 enum Sort {
