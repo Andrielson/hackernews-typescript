@@ -4,16 +4,6 @@ import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 import {APP_SECRET} from "../utils/auth";
 
-export const AuthPayload = objectType({
-    name: "AuthPayload",
-    definition(t) {
-        t.nonNull.string("token");
-        t.nonNull.field("user", {
-            type: "User",
-        });
-    },
-});
-
 function getToken(userId: number) {
     const now = new Date();
     const tokenPayload: jwt.JwtPayload = {
@@ -24,6 +14,16 @@ function getToken(userId: number) {
     };
     return jwt.sign(tokenPayload, APP_SECRET);
 }
+
+export const AuthPayload = objectType({
+    name: "AuthPayload",
+    definition(t) {
+        t.nonNull.string("token");
+        t.nonNull.field("user", {
+            type: "User",
+        });
+    },
+});
 
 export const AuthMutation = extendType({
     type: "Mutation",

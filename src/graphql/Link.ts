@@ -18,7 +18,7 @@ export const Link = objectType({
     },
 });
 
-export const LinksQuery = extendType({
+export const LinkQueries = extendType({
     type: "Query",
     definition(t) {
         t.nonNull.list.nonNull.field("links", {
@@ -27,12 +27,6 @@ export const LinksQuery = extendType({
                 return prisma.link.findMany();
             },
         });
-    },
-});
-
-export const LinkQuery = extendType({
-    type: "Query",
-    definition(t) {
         t.nullable.field("link", {
             type: "Link",
             args: {
@@ -46,7 +40,7 @@ export const LinkQuery = extendType({
     },
 });
 
-export const CreateLinkMutation = extendType({
+export const LinkMutations = extendType({
     type: "Mutation",
     definition(t) {
         t.nonNull.field("createLink", {
@@ -65,12 +59,6 @@ export const CreateLinkMutation = extendType({
                 });
             },
         });
-    },
-});
-
-export const UpdateLinkMutation = extendType({
-    type: "Mutation",
-    definition(t) {
         t.nonNull.field("updateLink", {
             type: "Link",
             args: {
@@ -87,12 +75,6 @@ export const UpdateLinkMutation = extendType({
                 });
             },
         });
-    },
-});
-
-export const DeleteLinkMutation = extendType({
-    type: "Mutation",
-    definition(t) {
         t.nonNull.field("deleteLink", {
             type: "Link",
             args: {
