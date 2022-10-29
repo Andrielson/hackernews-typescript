@@ -1,5 +1,21 @@
-import {extendType, idArg, intArg, nonNull, objectType, stringArg} from "nexus";
+import {arg, enumType, extendType, idArg, inputObjectType, intArg, list, nonNull, objectType, stringArg} from "nexus";
+import {Prisma} from "@prisma/client";
+
 import {Context} from "../context";
+
+export const Sort = enumType({
+    name: "Sort",
+    members: ["asc", "desc"],
+});
+
+export const LinkOrderByInput = inputObjectType({
+    name: "LinkOrderByInput",
+    definition(t) {
+        t.field("description", {type: Sort});
+        t.field("url", {type: Sort});
+        t.field("createdAt", {type: Sort});
+    },
+});
 
 export const Link = objectType({
     name: "Link",
@@ -36,8 +52,9 @@ export const LinkQueries = extendType({
                 filter: stringArg(),
                 skip: intArg(),
                 take: intArg(),
+                orderBy: arg({type: list(nonNull(LinkOrderByInput))}),
             },
-            resolve(_, {filter, skip, take}, {prisma}: Context) {
+            resolve(_, {filter, skip, take, orderBy}, {prisma}: Context) {
                 const where = !filter ? {} : {
                     OR: [
                         {description: {contains: filter}},
@@ -48,7 +65,8 @@ export const LinkQueries = extendType({
                     .findMany({
                         where,
                         skip: skip as number | undefined,
-                        take: take as number | undefined
+                        take: take as number | undefined,
+                        orderBy: orderBy as Prisma.Enumerable<Prisma.LinkOrderByWithRelationInput> | undefined,
                     });
             },
         });
