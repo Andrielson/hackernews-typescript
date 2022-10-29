@@ -24,7 +24,7 @@ type Mutation {
 
 type Query {
   link(id: ID!): Link
-  links: [Link!]!
+  links(postedById: ID): [Link!]!
 }
 
 type User {
