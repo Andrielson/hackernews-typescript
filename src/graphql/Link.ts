@@ -28,7 +28,8 @@ export const LinkQueries = extendType({
             },
             resolve(_, {postedById}, {prisma}: Context) {
                 const where = !postedById ? undefined : {postedById: Number(postedById)};
-                return prisma.link.findMany({where});
+                return prisma.link
+                    .findMany({where});
             },
         });
         t.nullable.field("link", {
@@ -38,7 +39,11 @@ export const LinkQueries = extendType({
             },
 
             resolve(_, {id}, {prisma}: Context) {
-                return prisma.link.findUnique({where: {id: +id}});
+                return prisma.link
+                    .findUnique({where: {id: +id}})
+                    .catch(() => {
+                        throw new Error("Link not found");
+                    });
             },
         });
     },
