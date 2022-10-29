@@ -14,6 +14,17 @@ export const AuthPayload = objectType({
     },
 });
 
+function getToken(userId: number) {
+    const now = new Date();
+    const tokenPayload: jwt.JwtPayload = {
+        iat: now.getTime(),
+        jti: randomUUID(),
+        sub: String(userId),
+        exp: now.setMinutes(now.getMinutes() + 30),
+    };
+    return jwt.sign(tokenPayload, APP_SECRET);
+}
+
 export const AuthMutation = extendType({
     type: "Mutation",
     definition(t) {
@@ -34,7 +45,7 @@ export const AuthMutation = extendType({
                     throw new Error("Invalid password");
                 }
 
-                const token = jwt.sign({userId: user.id}, APP_SECRET);
+                const token = getToken(user.id);
 
                 return {token, user};
             },
@@ -51,17 +62,7 @@ export const AuthMutation = extendType({
                 const {email, name} = args;
                 const password = await bcrypt.hash(args.password, 10);
                 const user = await prisma.user.create({data: {email, name, password}});
-
-                const now = new Date();
-                const tokenPayload: jwt.JwtPayload = {
-                    iat: now.getTime(),
-                    jti: randomUUID(),
-                    sub: String(user.id),
-                    exp: now.setMinutes(now.getMinutes() + 30),
-                };
-
-                const token = jwt.sign(tokenPayload, APP_SECRET);
-
+                const token = getToken(user.id);
                 return {token, user};
             }
         });

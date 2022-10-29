@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 export const APP_SECRET = "GraphQL-is-aw3some";
 
 export function decodeAuthHeader(authHeader: string): jwt.JwtPayload {
-    const token = authHeader.replace("Bearer", "");
+    const token = authHeader.replace("Bearer ", "");
 
     if (!token) {
         throw new Error("No token found");

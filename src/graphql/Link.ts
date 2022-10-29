@@ -11,7 +11,7 @@ export const Link = objectType({
             type: "User",
             resolve({id}, _, {prisma}) {
                 return prisma.link
-                    .findUnique({ where: {id}})
+                    .findUnique({where: {id}})
                     .postedBy();
             },
         });
@@ -56,9 +56,12 @@ export const CreateLinkMutation = extendType({
                 url: nonNull(stringArg()),
             },
 
-            resolve(_, {description, url}, {prisma}: Context) {
+            resolve(_, {description, url}, {prisma, userId}: Context) {
+                if (!userId) {
+                    throw new Error("Cannot post without loggin in.");
+                }
                 return prisma.link.create({
-                    data: {description, url}
+                    data: {description, url, postedBy: {connect: {id: userId}}}
                 });
             },
         });
