@@ -15,6 +15,14 @@ export const Link = objectType({
                     .postedBy();
             },
         });
+        t.nonNull.list.nonNull.field("voters", {
+            type: "User",
+            resolve({id}, _, {prisma}) {
+                return prisma.link
+                    .findUnique({where: {id}})
+                    .voters();
+            }
+        });
     },
 });
 
