@@ -1,4 +1,4 @@
-import {extendType, idArg, nonNull, objectType, stringArg} from "nexus";
+import {extendType, idArg, intArg, nonNull, objectType, stringArg} from "nexus";
 import {Context} from "../context";
 
 export const Link = objectType({
@@ -33,9 +33,11 @@ export const LinkQueries = extendType({
         t.nonNull.list.nonNull.field("links", {
             type: "Link",
             args: {
-                filter: stringArg()
+                filter: stringArg(),
+                skip: intArg(),
+                take: intArg(),
             },
-            resolve(_, {filter}, {prisma}: Context) {
+            resolve(_, {filter, skip, take}, {prisma}: Context) {
                 const where = !filter ? {} : {
                     OR: [
                         {description: {contains: filter}},
@@ -43,7 +45,11 @@ export const LinkQueries = extendType({
                     ]
                 };
                 return prisma.link
-                    .findMany({where});
+                    .findMany({
+                        where,
+                        skip: skip as number | undefined,
+                        take: take as number | undefined
+                    });
             },
         });
         t.nullable.field("link", {

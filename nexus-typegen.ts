@@ -186,6 +186,8 @@ export interface NexusGenArgTypes {
     }
     links: { // args
       filter?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
   }
 }
