@@ -54,6 +54,11 @@ export interface NexusGenObjects {
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
+  Feed: { // root type
+    count: number; // Int!
+    id?: string | null; // ID
+    links: NexusGenRootTypes['Link'][]; // [Link!]!
+  }
   Link: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
@@ -87,6 +92,11 @@ export interface NexusGenFieldTypes {
   AuthPayload: { // field return type
     token: string; // String!
     user: NexusGenRootTypes['User']; // User!
+  }
+  Feed: { // field return type
+    count: number; // Int!
+    id: string | null; // ID
+    links: NexusGenRootTypes['Link'][]; // [Link!]!
   }
   Link: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -125,6 +135,11 @@ export interface NexusGenFieldTypeNames {
   AuthPayload: { // field return type name
     token: 'String'
     user: 'User'
+  }
+  Feed: { // field return type name
+    count: 'Int'
+    id: 'ID'
+    links: 'Link'
   }
   Link: { // field return type name
     createdAt: 'DateTime'
