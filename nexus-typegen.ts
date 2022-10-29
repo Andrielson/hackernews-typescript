@@ -185,7 +185,7 @@ export interface NexusGenArgTypes {
       id: string; // ID!
     }
     links: { // args
-      postedById?: string | null; // ID
+      filter?: string | null; // String
     }
   }
 }

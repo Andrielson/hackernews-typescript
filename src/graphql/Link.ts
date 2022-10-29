@@ -1,4 +1,4 @@
-import {extendType, idArg, nonNull, nullable, objectType, stringArg} from "nexus";
+import {extendType, idArg, nonNull, objectType, stringArg} from "nexus";
 import {Context} from "../context";
 
 export const Link = objectType({
@@ -33,10 +33,15 @@ export const LinkQueries = extendType({
         t.nonNull.list.nonNull.field("links", {
             type: "Link",
             args: {
-                postedById: nullable(idArg())
+                filter: stringArg()
             },
-            resolve(_, {postedById}, {prisma}: Context) {
-                const where = !postedById ? undefined : {postedById: Number(postedById)};
+            resolve(_, {filter}, {prisma}: Context) {
+                const where = !filter ? {} : {
+                    OR: [
+                        {description: {contains: filter}},
+                        {url: {contains: filter}}
+                    ]
+                };
                 return prisma.link
                     .findMany({where});
             },
@@ -81,8 +86,8 @@ export const LinkMutations = extendType({
             type: "Link",
             args: {
                 id: nonNull(idArg()),
-                description: nullable(stringArg()),
-                url: nullable(stringArg()),
+                description: stringArg(),
+                url: stringArg(),
             },
             resolve(_, {id, ...data}, {prisma, userId}: Context) {
                 if (!userId) {

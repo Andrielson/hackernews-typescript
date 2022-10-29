@@ -32,7 +32,7 @@ type Mutation {
 
 type Query {
   link(id: ID!): Link
-  links(postedById: ID): [Link!]!
+  links(filter: String): [Link!]!
 }
 
 type User {
